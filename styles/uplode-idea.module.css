@@ -1,0 +1,246 @@
+/* Base styles for the container */
+.container {
+  position: relative;
+  top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1a1a1a; /* Darker background for better contrast */
+  border-radius: 10px;
+  padding: 20px;
+  margin: 70px auto;
+  width: 80%;
+  max-width: 800px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7); /* Deeper shadow for depth */
+  transition: transform 0.3s; /* Add transition for scaling effect */
+}
+
+.container:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+/* Title styles */
+.title {
+  color: #4a90e2; /* Netflix red */
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28px; /* Larger font for emphasis */
+  margin-bottom: 20px;
+  text-align: center; /* Centering the title */
+}
+
+/* Button styles */
+.button {
+  background-color: #4a90e2; /* Bright red button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold; /* Bold text for emphasis */
+}
+
+.button:hover {
+  background-color: #4a90e2; /* Darker red on hover */
+  transform: translateY(-2px); /* Slight upward movement */
+}
+
+/* Form styles */
+.form {
+  width: 100%;
+}
+
+/* Textarea styles */
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #4a90e2; /* Red border for text area */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  resize: none;
+  font-size: 16px; /* Increased font size */
+  transition: border 0.3s ease; /* Transition for border color */
+}
+
+.textarea:focus {
+  border-color: #4a90e2; /* Darker red when focused */
+  outline: none; /* Remove default outline */
+}
+
+/* File input styles */
+.fileInput {
+  margin-bottom: 10px;
+}
+
+/* Styles for uploaded ideas section */
+.scrollContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ideasContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  gap: 15px; /* Increased space between ideas */
+  width: 100%;
+}
+
+/* Box style for uploaded ideas */
+.ideaBox {
+  background-color: #222;
+  border-radius: 10px; /* More rounded corners */
+  padding: 15px;
+  width: 250px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for scaling and shadow */
+}
+
+.ideaBox:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7); /* Deeper shadow on hover */
+}
+
+/* Content within the idea box */
+.ideaContent {
+  text-align: center;
+}
+
+/* Media styling */
+.media {
+  width: 100%;
+  border-radius: 5px;
+  max-height: 200px;
+}
+
+/* Scroll button styles */
+.scrollButton {
+  background-color: #4a90e2; /* Bright red button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 10px;
+}
+
+.scrollButton:hover {
+  background-color: #4a90e2; /* Darker red on hover */
+  transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+/* Error and success message styles */
+.error {
+  color: #4a90e2; /* Bright red for errors */
+  margin-top: 10px;
+}
+
+.success {
+  color: #00cc00; /* Bright green for success */
+  margin-top: 10px;
+}
+
+/* Subtitle styles */
+.subtitle {
+  color: #4a90e2; /* Netflix red */
+  font-size: 22px; /* Subtitle size */
+  margin-top: 30px;
+}
+
+/* Account info styling */
+.accountInfo {
+  color: #ffffff; /* White for account info */
+  margin-top: 10px;
+}
+
+/* Expanded Idea Modal Styles */
+.expandedIdea {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9); /* Darker background for modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
+  padding: 20px;
+}
+
+.expandedIdeaContent {
+  background: #ffffff; /* White background for modal content */
+  padding: 20px;
+  border-radius: 10px; /* More rounded corners */
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+/* Close button styles in modal */
+.closeButton {
+  background: transparent; /* Make the background transparent */
+  color: #4a90e2; /* Use the Netflix red color */
+  border: none;
+  font-size: 24px; /* Larger size for close button */
+  cursor: pointer;
+  margin-top: 20px;
+  transition: transform 0.2s ease; /* Add a slight scale effect */
+}
+
+.closeButton:hover {
+  transform: scale(1.1); /* Slightly enlarge button on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .ideaBox {
+    width: 90%; /* Adjust width for mobile screens */
+  }
+
+  .button {
+    font-size: 14px; /* Smaller button font size for mobile */
+  }
+
+  .scrollButton {
+    width: 30px; /* Smaller scroll button */
+    height: 30px; /* Smaller scroll button */
+  }
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button {
+  cursor: pointer;
+}

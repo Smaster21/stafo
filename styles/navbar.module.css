@@ -1,0 +1,41 @@
+/* styles/navbar.module.css */
+
+.navbar {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    background-color: #4a90e2; /* Navbar background color */
+    padding: 15px 20px;
+    display: flex; /* Use flexbox to align items */
+    justify-content: space-between; /* Space between links and Header */
+    align-items: center; /* Center items vertically */
+}
+
+.navbarLinks {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px; /* Space between links */
+}
+
+.navbarLinks li {
+    display: inline;
+}
+
+.navbarLinks a {
+    color: #ffffff; /* Link color */
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.navbarLinks a:hover {
+    text-decoration: underline; /* Underline on hover */
+    color: #f0f4f8; /* Lighter color on hover */
+}
+
+.headerContainer {
+    /* Styles for the Header container */
+}

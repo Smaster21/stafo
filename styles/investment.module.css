@@ -1,0 +1,114 @@
+/* styles/investmentModal.module.css */
+
+/* Modal Overlay */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8); /* Darker overlay for better focus */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease; /* Fade-in animation for overlay */
+}
+
+/* Modal Box */
+.modal {
+    background: linear-gradient(135deg, #1d1f21, #2b2d31); /* Gradient background for a sleek look */
+    color: #fff; /* White text color */
+    padding: 40px; /* Padding for spacing */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Deeper shadow for elevation */
+    width: 600px; /* Fixed width for modal */
+    animation: slideIn 0.3s ease; /* Slide-in animation for modal */
+}
+
+/* Modal Title */
+.h2 {
+    margin: 0 0 20px; /* Space below title */
+    font-size: 1.8rem; /* Increased title font size */
+    text-align: center; /* Center align title */
+    font-family: 'Press Start 2P', cursive; /* Retro gaming font */
+}
+
+/* Label Styles */
+.label {
+    display: flex; /* Flexbox for label and input */
+    flex-direction: column; /* Column layout */
+    margin-bottom: 15px; /* Space below each label */
+}
+
+/* Input Styles */
+.input {
+    padding: 10px; /* Padding for inputs */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent input background */
+    color: #fff; /* White text for inputs */
+    font-size: 1rem; /* Input font size */
+    transition: background-color 0.3s; /* Smooth transition for focus */
+}
+
+.input:focus {
+    background: rgba(255, 255, 255, 0.2); /* Darker background on focus */
+    outline: none; /* Remove outline */
+}
+
+/* Button Styles */
+.button {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    padding: 12px 20px; /* Padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 1rem; /* Font size */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+    margin-top: 10px; /* Space above each button */
+}
+
+/* Button Hover Effects */
+.button:hover {
+    background-color: #0056b3; /* Darker blue */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+/* Cancel Button with Different Color */
+.button:nth-of-type(2) {
+    background-color: #dc3545; /* Red background for cancel button */
+}
+
+.button:nth-of-type(2):hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Button Container for Alignment */
+.buttonContainer {
+    display: flex; /* Flexbox for button alignment */
+    justify-content: space-between; /* Space buttons evenly */
+    margin-top: 20px; /* Space above the button container */
+}
+
+/* Fade-in Animation for Modal Overlay */
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start from transparent */
+    }
+    to {
+        opacity: 1; /* End at fully opaque */
+    }
+}
+
+/* Slide-in Animation for Modal */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px); /* Slide from above */
+        opacity: 0; /* Start from transparent */
+    }
+    to {
+        transform: translateY(0); /* Slide to original position */
+        opacity: 1; /* End at fully opaque */
+    }
+}

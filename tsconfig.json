@@ -19,6 +19,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.tsx", "**/*.ts", "**/*.js","**/*.tsx", "Stafo_Backend/index.js"],
   "exclude": ["node_modules"]
 }
