@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import styles from '../styles/fund.module.css';
+import { useAccount } from 'wagmi'; // Import useAccount from wagmi
+import { ConnectButton } from '@rainbow-me/rainbowkit'; // Import the ConnectButton for wallet connection
 
 interface Investment {
   id: string;
@@ -16,26 +17,13 @@ interface Idea {
 }
 
 const FundPage = () => {
+  const { isConnected, address: userAddress } = useAccount(); // Get wallet connection status and user address
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [userIdeas, setUserIdeas] = useState<Idea[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [userAddress, setUserAddress] = useState<string>('');
 
-  const connectToMetaMask = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setUserAddress(accounts[0]);
-      } catch (error) {
-        console.error('Error connecting to MetaMask:', error);
-        setError('Failed to connect to MetaMask.');
-      }
-    } else {
-      setError('MetaMask not detected. Please install it.');
-    }
-  };
-
+  // Fetch user's uploaded ideas
   const fetchUserIdeas = async () => {
     if (!userAddress) return;
     try {
@@ -55,6 +43,7 @@ const FundPage = () => {
     }
   };
 
+  // Fetch all investments
   const fetchInvestments = async () => {
     try {
       const response = await fetch('http://localhost:5000/investments');
@@ -74,10 +63,6 @@ const FundPage = () => {
       setError('Failed to fetch investments');
     }
   };
-
-  useEffect(() => {
-    connectToMetaMask();
-  }, []);
 
   useEffect(() => {
     if (userAddress) {
@@ -102,34 +87,37 @@ const FundPage = () => {
   });
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Your Investment Overview</h1>
-      {loading ? (
-        <p>Loading investments...</p>
-      ) : error ? (
-        <p className={styles.error}>{error}</p>
-      ) : totalInvestmentsByIdea.length === 0 ? (
-        <p>No investments found for your uploaded ideas.</p>
-      ) : (
-        <div className={styles.investmentList}>
-          {totalInvestmentsByIdea.map(idea => (
-            <div key={idea.id} className={styles.investmentBox}>
-              <h3>{idea.title}</h3>
-              <p>Total Investment: {idea.total} USD</p>
-              <h4>Your funds:</h4>
-              <ul>
-                {investments
-                  .filter(investment => investment.ideaId === idea.id)
-                  .map(investment => (
-                    <li key={investment.id}>
-                      {investment.userAddress} fund {investment.amount} {investment.currency}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-semibold mb-6">Your Investment Overview</h1>
+      {!isConnected ?
+        <p className="text-lg">Please connect your wallet to view Funds.</p>
+        : loading ? (
+          <p>Loading investments...</p>
+        ) : error ? (
+          <p className="text-red-600">{error}</p>
+        ) : totalInvestmentsByIdea.length === 0 ? (
+          <p>No investments found for your uploaded ideas.</p>
+        ) : (
+          <div className="space-y-6">
+            {totalInvestmentsByIdea.map(idea => (
+              <div key={idea.id} className="border p-6 rounded-lg shadow-lg space-y-4">
+                <h3 className="text-2xl font-semibold">{idea.title}</h3>
+                <p className="text-lg">Total Investment: {idea.total} USD</p>
+
+                <h4 className="font-semibold">Your funds:</h4>
+                <ul className="space-y-2">
+                  {investments
+                    .filter(investment => investment.ideaId === idea.id)
+                    .map(investment => (
+                      <li key={investment.id} className="text-gray-800">
+                        {investment.userAddress} fund {investment.amount} {investment.currency}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
     </div>
   );
 };

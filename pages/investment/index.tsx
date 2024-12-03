@@ -1,7 +1,8 @@
 // components/InvestmentModal.tsx
 
 import { useState } from 'react';
-import styles from '../styles/investment.module.css';
+import styles from '@/styles/investment.module.css';
+import { useAccount } from 'wagmi'; // Import useAccount from wagmi
 
 interface InvestmentModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface InvestmentModalProps {
 }
 
 const InvestmentModal: React.FC<InvestmentModalProps> = ({ isOpen, onClose, onInvest, ideaId }) => {
+  const { isConnected, address } = useAccount(); // Access wallet connection state using wagmi
   const [amount, setAmount] = useState<number>(0);
   const [currency, setCurrency] = useState<string>('Btc');
 
@@ -29,7 +31,7 @@ const InvestmentModal: React.FC<InvestmentModalProps> = ({ isOpen, onClose, onIn
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !isConnected) return null; // Only show modal if connected
 
   return (
     <div className={styles.modalOverlay}>

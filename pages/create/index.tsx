@@ -1,5 +1,5 @@
 import { useState, FormEvent, useEffect } from 'react';
-import styles from '../styles/uplode-idea.module.css';
+import { useAccount } from 'wagmi';
 
 interface Idea {
   id: string;
@@ -10,6 +10,7 @@ interface Idea {
 }
 
 const UploadIdea = () => {
+  const { address } = useAccount(); // Getting wallet address from wagmi
   const [idea, setIdea] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
@@ -17,17 +18,14 @@ const UploadIdea = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
-  const [account, setAccount] = useState<string | null>(null);
-  const [accounts, setAccounts] = useState<string[]>([]);
   const [expandedIdea, setExpandedIdea] = useState<Idea | null>(null);
 
-  // Fetch ideas when the account changes
   useEffect(() => {
     const fetchIdeas = async () => {
-      if (!account) return;
+      if (!address) return;
 
       try {
-        const response = await fetch(`http://localhost:5000/ideas/${account}`);
+        const response = await fetch(`http://localhost:5000/ideas/${address}`);
         if (!response.ok) {
           throw new Error('Failed to fetch ideas');
         }
@@ -44,32 +42,9 @@ const UploadIdea = () => {
         setError('Failed to fetch ideas');
       }
     };
+
     fetchIdeas();
-  }, [account]);
-
-  const connectMetaMask = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const fetchedAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        console.log('Fetched accounts:', fetchedAccounts);
-        if (fetchedAccounts.length > 0) {
-          setAccounts(fetchedAccounts);
-          setAccount(fetchedAccounts[0]);
-          setIdeasList([]); // Clear previous ideas when connecting a new account
-        }
-      } catch (error) {
-        console.error('Failed to connect to MetaMask:', error);
-        setError('Failed to connect to MetaMask. Please try again.');
-      }
-    } else {
-      setError('Please install MetaMask to use this feature.');
-    }
-  };
-
-  const handleAccountChange = (selectedAccount: string) => {
-    setAccount(selectedAccount);
-    setIdeasList([]); // Clear ideas when switching accounts
-  };
+  }, [address]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -86,14 +61,14 @@ const UploadIdea = () => {
         throw new Error('Please enter a valid idea.');
       }
 
-      if (!account) {
+      if (!address) {
         throw new Error('You must connect to MetaMask first.');
       }
 
       const formData = new FormData();
       formData.append('title', title);
       formData.append('idea', idea);
-      formData.append('userAddress', account);
+      formData.append('userAddress', address);
       if (file) {
         formData.append('file', file);
       }
@@ -150,50 +125,18 @@ const UploadIdea = () => {
     setExpandedIdea(null);
   };
 
-  useEffect(() => {
-    const handleAccountsChanged = (accounts: string[]) => {
-      console.log('Accounts changed:', accounts);
-      if (accounts.length > 0) {
-        setAccount(accounts[0]); // Set the first account
-        setIdeasList([]); // Clear ideas when switching accounts
-      } else {
-        console.log('Please connect to MetaMask.');
-      }
-    };
-
-    // Add the event listener
-    window.ethereum.on('accountsChanged', handleAccountsChanged);
-
-    return () => {
-      // Cleanup the event listener on component unmount
-      window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-    };
-  }, []);
-
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Upload Your Idea</h1>
-      <button className={styles.button} onClick={connectMetaMask}>Connect MetaMask</button>
-      {accounts.length > 0 ? (
-        <div>
-          <p className={styles.accountInfo}>Connected Accounts:</p>
-          <ul className={styles.accountList}>
-            {accounts.map((acc) => (
-              <li key={acc} className={styles.accountItem}>
-                <button onClick={() => handleAccountChange(acc)} className={styles.button}>
-                  {acc}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="max-w-4xl mx-auto p-4">
+      <h1 className="text-3xl font-semibold mb-6">Upload Your Idea</h1>
+      {address ? (
+        <p className="text-lg mb-4">Connected Account: {address}</p>
       ) : (
-        <p>Please connect your MetaMask account.</p>
+        <p className="text-lg mb-4">Please connect your MetaMask wallet.</p>
       )}
-      {account && <p className={styles.accountInfo}>Selected Account: {account}</p>}
-      <form onSubmit={handleSubmit} className={styles.form}>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          className={styles.textarea}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -201,7 +144,7 @@ const UploadIdea = () => {
           required
         />
         <textarea
-          className={styles.textarea}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
           rows={4}
@@ -209,52 +152,87 @@ const UploadIdea = () => {
           required
         />
         <input
-          className={styles.fileInput}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           type="file"
           accept="image/*,video/*"
           onChange={handleFileChange}
         />
-        <button type="submit" className={styles.button} disabled={loading}>
+        <button
+          type="submit"
+          className={`w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
+        >
           {loading ? 'Uploading...' : 'Upload Idea'}
         </button>
       </form>
-      {error && <p className={styles.error}>Error: {error}</p>}
-      {success && <p className={styles.success}>Idea Uploaded successfully!</p>}
 
-      <h2 className={styles.subtitle}>Your Uploaded Ideas:</h2>
-      <div className={styles.scrollContainer}>
-        <button className={styles.scrollButton} onClick={scrollLeft}>←</button>
-        <div className={styles.ideasContainer} id="ideasContainer">
+      {error && <p className="mt-4 text-red-600">{error}</p>}
+      {success && <p className="mt-4 text-green-600">Idea Uploaded successfully!</p>}
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Your Uploaded Ideas:</h2>
+      <div className="flex items-center space-x-2 mb-6">
+        <button
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+          onClick={scrollLeft}
+        >
+          ←
+        </button>
+        <div
+          className="flex overflow-x-auto space-x-4"
+          id="ideasContainer"
+        >
           {ideasList.length === 0 ? (
-            <p>No ideas uploaded yet.</p>
+            <p className="text-lg text-gray-500">No ideas uploaded yet.</p>
           ) : (
             ideasList.map((item) => (
-              <div key={item.id} className={styles.ideaBox}>
-                <div className={styles.ideaContent}>
-                  <h3>{item.title}</h3>
+              <div key={item.id} className="flex-shrink-0 w-64 p-4 border border-gray-300 rounded-lg space-y-2">
+                <div>
+                  <h3 className="font-semibold">{item.title}</h3>
                   <p>{item.idea.length > 100 ? item.idea.slice(0, 100) + '...' : item.idea}</p>
-                  <button onClick={() => handleReadMore(item)} className={styles.button}>Read More</button>
+                  <button
+                    onClick={() => handleReadMore(item)}
+                    className="text-indigo-600 hover:underline"
+                  >
+                    Read More
+                  </button>
                 </div>
               </div>
             ))
           )}
         </div>
-        <button className={styles.scrollButton} onClick={scrollRight}>→</button>
+        <button
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+          onClick={scrollRight}
+        >
+          →
+        </button>
       </div>
 
       {/* Modal for expanded idea */}
       {expandedIdea && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2>{expandedIdea.title}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full space-y-4">
+            <h2 className="text-2xl font-semibold">{expandedIdea.title}</h2>
             <p>{expandedIdea.idea}</p>
             {expandedIdea.file && (
               <div>
-                <h4>Attached File:</h4>
-                <a href={expandedIdea.file} target="_blank" rel="noopener noreferrer">View File</a>
+                <h4 className="font-semibold">Attached File:</h4>
+                <a
+                  href={expandedIdea.file}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 hover:underline"
+                >
+                  View File
+                </a>
               </div>
             )}
-            <button onClick={closeExpandedIdea} className={styles.button}>Close</button>
+            <button
+              onClick={closeExpandedIdea}
+              className="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
