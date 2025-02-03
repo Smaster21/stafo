@@ -1,7 +1,7 @@
 // components/InvestmentModal.tsx
 
 import { useState } from 'react';
-import styles from '@/styles/investment.module.css';
+import styles from 'styles/investment.module.css'; // Corrected import statement
 import { useAccount } from 'wagmi'; // Import useAccount from wagmi
 
 interface InvestmentModalProps {
